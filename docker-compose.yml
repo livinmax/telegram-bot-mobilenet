@@ -1,0 +1,25 @@
+version: '3.8'
+
+services:
+  model_service:
+    image: livinmax/model_service:1.0
+    ports:
+      - "5001:5001"
+    volumes:
+      - ./model_service/mobilenetv2_4class.pth:/app/mobilenetv2_4class.pth
+    networks:
+      - bot-network
+
+  bot_service:
+    image: livinmax/bot_service:1.0
+    environment:
+      - TELEGRAM_BOT_TOKEN=${TELEGRAM_BOT_TOKEN}
+    networks:
+      - bot-network
+    depends_on:
+      - model_service
+
+networks:
+  bot-network:
+    driver: bridge
+
